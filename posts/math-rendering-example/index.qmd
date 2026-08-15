@@ -2,6 +2,7 @@
 title: "Math rendering example"
 author: "Richard Mason"
 date: "2026-08-15"
+description: "A quick check that maths renders correctly."
 categories: [meta]
 ---
 

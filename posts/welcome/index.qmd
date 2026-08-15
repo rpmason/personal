@@ -2,6 +2,7 @@
 title: "Welcome"
 author: "Richard Mason"
 date: "2026-08-15"
+description: "The first post on the blog."
 categories: [news]
 ---
 

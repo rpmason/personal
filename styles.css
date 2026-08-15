@@ -1,1 +1,20 @@
 /* css styles */
+
+.post-listing-item {
+  padding-bottom: 1.5em;
+  margin-bottom: 1.5em;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.post-listing-item:last-of-type {
+  border-bottom: none;
+}
+
+.post-listing-item h3 .anchorjs-link {
+  display: none;
+}
+
+.post-meta-line {
+  font-size: 1rem;
+  color: inherit;
+}

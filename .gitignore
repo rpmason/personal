@@ -38,3 +38,9 @@ next-env.d.ts
 /.quarto/
 **/*.quarto_ipynb
 /_site/
+
+# quarto render --debug leftovers
+/site_libs/
+/index.html.md
+/index-listing.json
+/index.feed-full-staged
