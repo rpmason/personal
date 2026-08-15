@@ -9,8 +9,7 @@ listing:
   categories: true
   sort-ui: false
   filter-ui: false
-page-layout: full
-title-block-banner: true
+page-layout: article
 ---
 
 

@@ -2,6 +2,9 @@
 title: "About"
 about:
   template: jolla
+  image: images/profile.png
+  image-shape: round
+  image-width: 12em
   links:
     - icon: github
       text: GitHub

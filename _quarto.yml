@@ -8,6 +8,9 @@ website:
   navbar:
     right:
       - about.qmd
+      - icon: twitter-x
+        href: https://x.com/richpmason
+        aria-label: X
       - icon: github
         href: https://github.com/rpmason
 format:
