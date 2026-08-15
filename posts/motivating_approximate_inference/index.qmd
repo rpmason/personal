@@ -3,7 +3,7 @@ title: "Motivating Approximate Bayesian Inference"
 author: "Richard Mason"
 date: "2026-08-14"
 description: "Short rationale for why we care about approximate Bayesian inference."
-categories: [AI]
+categories: [Bayesian Inference]
 ---
 
 Suppose we have an agent that makes an observation about the world $y\in\mathcal{Y}$ and has some internal model that describes the likelihood of that observation $y$ conditioned on some hidden state of the world $x\in\mathcal{X}$, which we denote by $p(y | x)$, and a prior distribution on the hidden states of the world $p(x)$. Bayes' rule states that
