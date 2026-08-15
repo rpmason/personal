@@ -8,4 +8,4 @@ about:
       href: https://github.com/rpmason
 ---
 
-Notes on maths and other things.
+Notes on AI and other things.
