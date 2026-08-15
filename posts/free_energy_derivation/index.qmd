@@ -6,7 +6,7 @@ description: "Deriving the free energy functional starting from Bayes' theorem."
 categories: [Variational Inference]
 ---
 
-In the [previous post](../motivating_approximate_inference/index.qmd) we saw that exact Bayesian inference is usually intractable, which leaves approximate inference as a practical route. One of the approaches to approximate inference that I like is the Free Energy functional. The idea of the Free Energy functional is to replace an intractable intregral with an optimisation over a chosen family of approximating distributions. 
+In the [previous post](../motivating_approximate_inference/index.qmd) we saw that exact Bayesian inference is usually intractable, which leaves approximate inference as a practical route. One of the approaches to approximate inference that I like is the Free Energy functional. The idea of the Free Energy functional is to replace an intractable intregral with an optimisation over a chosen family of approximating distributions using the Kullbach-Leibler (KL) divergence. 
 
 To derive the free energy we start with Bayes' rule and rearrange to focus on the intractable marginal $p(y)$ 
 

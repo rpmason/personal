@@ -6,6 +6,8 @@ about:
   image-shape: round
   image-width: 12em
   links:
+    - icon: twitter-x
+      href: https://x.com/richpmason
     - icon: github
       text: GitHub
       href: https://github.com/rpmason

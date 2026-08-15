@@ -18,3 +18,23 @@
   font-size: 1rem;
   color: inherit;
 }
+
+/* Centre the icon on label-less about links (theme adds a right margin and an
+   empty label span, which pull the icon off-centre) */
+.about-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-link i.bi {
+  margin-right: 0;
+}
+
+.about-link .about-link-text:empty {
+  display: none;
+}
+
+.about-link .about-link-text:not(:empty) {
+  margin-left: 0.15em;
+}
