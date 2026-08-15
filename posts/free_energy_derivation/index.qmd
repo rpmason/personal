@@ -6,11 +6,13 @@ description: "Deriving the free energy functional starting from Bayes' theorem."
 categories: [AI, Variational Inference]
 ---
 
-One of the approaches to approximate inference that I like is the Free Energy functional, popularised by Friston as a core part of his free energy principle for understanding the brain. The idea is to first rearrange Bayes' rule to focus on the intractable marginal $p(y)$. 
+In the [previous post](../motivating_approximate_inference/index.qmd) we saw that exact Bayesian inference is usually intractable, which leaves approximate inference as a practical route. One of the approaches to approximate inference that I like is the Free Energy functional. The idea of the Free Energy functional is to replace an intractable intregral with an optimisation over a chosen family of approximating distributions. 
 
-$$p(y) = \frac{p(y|x)p(x)}{p(x|y)}$$
+To derive the free energy we start with Bayes' rule and rearrange to focus on the intractable marginal $p(y)$ 
 
-Let $q_{\theta}(x)$ be an arbitrary probability distirbution parameterised by $\theta\in\Theta$. We have the freedom to insert this distribution into the top and bottom of the fraction on the RHS
+$$p(y) = \frac{p(y|x)p(x)}{p(x|y)}.$$
+
+Let $q_{\theta}(x)$ be an arbitrary probability distribution parameterised by $\theta\in\Theta$. We have the freedom to insert this distribution into the top and bottom of the fraction on the RHS
 
 $$p(y) = \frac{p(y|x)p(x)q_{\theta}(x)}{p(x|y)q_{\theta}(x)}.$$
 
@@ -31,14 +33,21 @@ On the RHS we can choose how to split the terms inside the logarithm
 
 $$-\mathbb{E}_{q_{\theta}(x)}\left[\log{\frac{p(y|x)p(x)q_{\theta}(x)}{p(x|y)q_{\theta}(x)}}\right] = -\mathbb{E}_{q_{\theta}(x)}\left[\log{\frac{p(y|x)p(x)}{q_{\theta}(x)}}\right]-\mathbb{E}_{q_{\theta}(x)}\left[\log{\frac{q_{\theta}(x)}{p(x|y)}}\right].$$
 
-Recognising the second term as the Kullbach leibler divergence between $q_{\theta}(x)$ and $p(x | y)$ which is always nonnegative we have the inequality
+Recognising that in the second term we are subtracting the Kullback–Leibler divergence $D_{KL}(q_{\theta}(x) \;||\; p(x|y)) = \mathbb{E}_{q_{\theta}(x)}\left[\log\frac{q_{\theta}(x)}{p(x|y)}\right]$, which is always nonnegative, we have the inequality^[We also need $q_{\theta}$ to be absolutely continuous with respect to the posterior, $p(x|y)$: if $q_{\theta}$ places mass where the posterior has none then the divergence is infinite and the bound, while still true, tells us nothing.]
 
 $$-\log{p(y)} \leq -\mathbb{E}_{q_{\theta}(x)}\left[\log{\frac{p(y|x)p(x)}{q_{\theta}(x)}}\right]$$
 
-with equality attained when  $q_{\theta}(x)=p(x | y)$. We can split terms out on the right hand side into an energy term minus an entropy term
+with equality attained when  $q_{\theta}(x)=p(x | y)$. The right hand side is the free energy $F[q_{\theta}]$; its negative is what the variational inference literature calls the evidence lower bound, or ELBO, so minimising the free energy and maximising the ELBO are the same operation. We can split terms out on the right hand side into an energy term minus an entropy term
 
 $$-\log{p(y)} \leq -\mathbb{E}_{q_{\theta}(x)}\left[\log{p(y|x)p(x)}\right] - H(q_{\theta}(x)) $$
 
-where $H(q_{\theta}(x)) = -\mathbb{E}_{q_{\theta}(x)}\left[\log{q_\theta(x)}\right]$. In other words the surprise of an observation is bounded above by the expectation of the joint probability of $x$ and $y$ occurring under our model and the entropy of the approximating distribution $q_{\theta}(x)$. A low entropy $q_{\theta}(x)$ places a lot of weight on some specific states of the world, which due to the the energy term need to 
+where $H(q_{\theta}(x)) = -\mathbb{E}_{q_{\theta}(x)}\left[\log{q_\theta(x)}\right]$. In other words, the surprise of an observation is bounded above by the expected energy of the joint model under $q_\theta$, minus the entropy of $q_\theta$. The two terms pull in opposite directions. The energy term is happiest when all of $q_\theta$'s mass sits on the single state that best explains the observation; the entropy term resists exactly that, because a concentrated $q_\theta$ has low entropy, and subtracting something small leaves the bound high. The balance is a $q_\theta$ that spreads mass across states in proportion to how well each explains $y$ under the model.
 
-The natural next questions are how can we choose $q_{\theta}(x)$ to be expressive enough to represent different states of the world yet make the optimisation problem of minimising the resulting functional computationally tractable? These question will be a subject for a subsequent post.
+The right hand side involves only $p(y|x)$, $p(x)$ and $q_\theta(x)$ — the likelihood and prior we specified, and the approximating distribution we chose ourselves. The intractable $p(x|y)$, and with it the integral we could not do, has dropped out entirely. And since the gap between the two sides is exactly $D_{KL}(q_{\theta}(x) \,\|\, p(x|y))$, pushing the bound down simultaneously sharpens our estimate of the surprise and drags $q_{\theta}$ toward the true posterior.
+
+Alternatively we can rewrite the equation above in the form that will be familiar to people with an interest in Variational Autoencoders:
+
+$$-\log{p(y)} \leq -\mathbb{E}_{q_{\theta}(x)}\left[\log{p(y|x)}\right] + D_{KL}(q_{\theta}(x) \; || \; p(x)), $$
+which decomposes the free energy in terms of an accuracy term and a complexity term (divergence from the prior).
+
+The natural next questions are how can we choose $q_{\theta}(x)$ to be expressive enough to represent different states of the world yet make the optimisation problem of minimising the resulting functional computationally tractable? This question will be a subject for a subsequent post.
