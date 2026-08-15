@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>Richard Mason</title>
+<link>https://richardpmason.com/</link>
+<atom:link href="https://richardpmason.com/index.xml" rel="self" type="application/rss+xml"/>
+<description>Notes on maths and other things.</description>
+<generator>quarto-1.10.18</generator>
+<lastBuildDate>Sat, 15 Aug 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Math rendering example</title>
+  <dc:creator>Richard Mason</dc:creator>
+  <link>https://richardpmason.com/posts/math-rendering-example/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>A quick check that maths renders correctly. Inline math like <img src="https://latex.codecogs.com/png.latex?e%5E%7Bi%5Cpi%7D%20+%201%20=%200"> works within a sentence.</p>
+<p>Display equations work too:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cint_%7B-%5Cinfty%7D%5E%7B%5Cinfty%7D%20e%5E%7B-x%5E2%7D%20%5C,%20dx%20=%20%5Csqrt%7B%5Cpi%7D%0A"></p>
+<p>As does numbered equation notation with <code>\begin{equation}</code>:</p>
+<p><span id="eq-maxwell-ampere"><img src="https://latex.codecogs.com/png.latex?%0A%5Cnabla%20%5Ctimes%20%5Cmathbf%7BB%7D%20-%20%5Cfrac%7B1%7D%7Bc%7D%5Cfrac%7B%5Cpartial%20%5Cmathbf%7BE%7D%7D%7B%5Cpartial%20t%7D%20=%20%5Cfrac%7B4%5Cpi%7D%7Bc%7D%5Cmathbf%7BJ%7D%0A%5Ctag%7B1%7D"></span></p>
+<p>Referenced as Equation&nbsp;1.</p>
+
+
+
+ ]]></description>
+  <category>meta</category>
+  <guid>https://richardpmason.com/posts/math-rendering-example/</guid>
+  <pubDate>Sat, 15 Aug 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Welcome</title>
+  <dc:creator>Richard Mason</dc:creator>
+  <link>https://richardpmason.com/posts/welcome/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>This is the first post on the blog. More to follow.</p>
+
+
+
+ ]]></description>
+  <category>news</category>
+  <guid>https://richardpmason.com/posts/welcome/</guid>
+  <pubDate>Sat, 15 Aug 2026 00:00:00 GMT</pubDate>
+</item>
+</channel>
+</rss>

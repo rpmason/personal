@@ -1,0 +1,30 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Posts",
+    "section": "",
+    "text": "Math rendering example\n\n\n\nmeta\n\n\n\n\n\n\n\n\n\nAug 15, 2026\n\n\nRichard Mason\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nAug 15, 2026\n\n\nRichard Mason\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/welcome/index.html",
+    "href": "posts/welcome/index.html",
+    "title": "Welcome",
+    "section": "",
+    "text": "This is the first post on the blog. More to follow."
+  },
+  {
+    "objectID": "posts/math-rendering-example/index.html",
+    "href": "posts/math-rendering-example/index.html",
+    "title": "Math rendering example",
+    "section": "",
+    "text": "A quick check that maths renders correctly. Inline math like \\(e^{i\\pi} + 1 = 0\\) works within a sentence.\nDisplay equations work too:\n\\[\n\\int_{-\\infty}^{\\infty} e^{-x^2} \\, dx = \\sqrt{\\pi}\n\\]\nAs does numbered equation notation with \\begin{equation}:\n\\[\n\\nabla \\times \\mathbf{B} - \\frac{1}{c}\\frac{\\partial \\mathbf{E}}{\\partial t} = \\frac{4\\pi}{c}\\mathbf{J}\n\\tag{1}\\]\nReferenced as Equation 1."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "Notes on AI and other things."
+  }
+]

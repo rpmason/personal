@@ -1,8 +1,0 @@
----
-title: "Welcome"
-author: "Richard Mason"
-date: "2026-08-15"
-categories: [news]
----
-
-This is the first post on the blog. More to follow.
