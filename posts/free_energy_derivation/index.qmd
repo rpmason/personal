@@ -1,25 +1,12 @@
 ---
-title: "Why do we want to do approximate inference?"
+title: "Deriving the Free Energy functional aka the ELBO"
 author: "Richard Mason"
 date: "2026-08-15"
-description: "Motivating approximate inference based on the intractibility of doing exact bayesian inference."
-categories: [AI]
+description: "Deriving the free energy functional starting from Bayes' theorem."
+categories: [AI, Variational Inference]
 ---
 
-Suppose we have an agent that makes an observation about the world $y\in\mathcal{Y}$ and has some internal model that describes the probability of that observation $y$ conditioned on some hidden state of the world $x\in\mathcal{X}$, which we denote by $p(y | x)$, and a prior distribution on the hidden states of the world $p(x)$. Bayes' rule states that
-$$p(x | y) = \frac{p(y | x)p(x)}{p(y)} = \frac{p(y | x)p(x)}{\int {p(y | x)p(x)}dx},$$
-
-so in principle the agent can calculate the probability of a hidden state of the world under its internal model by multipling the likelihood $p(y | x)$ by the prior $p(x)$ and normalising by the marginal $p(y)$. The challenge is that computing the marginal term requires integrating over all of the possible hidden states, which tends to be intractable unless the internal model is chosen to have a form that has a closed form integral e.g., a Gaussian.
-
-The consequence is that if an Agent want to do Bayesian inference they face a choice: 
-
-1. large computational cost to do exact inference on arbitrary internal models. 
-2. restrict the internal model to a family that is tractable to integrate in closed form.
-3. do some form of approximate inference e.g., variational inference. 
-
-Depending on the compute time budget available, exact inference is likely to be infeasible, and limiting ourselves to families of distributions that have closed form integrals is quite restrictive, which leaves us with branch 3 to explore.
-
-One of the approaches to approximate inference that I like is the Free Energy principle by Friston. The idea is to first rearrange Bayes' rule to focus on the intractable marginal $p(y)$. 
+One of the approaches to approximate inference that I like is the Free Energy functional, popularised by Friston as a core part of his free energy principle for understanding the brain. The idea is to first rearrange Bayes' rule to focus on the intractable marginal $p(y)$. 
 
 $$p(y) = \frac{p(y|x)p(x)}{p(x|y)}$$
 
@@ -38,8 +25,20 @@ $$-\mathbb{E}_{q_{\theta}(x)}[\log{p(y)}] = -\mathbb{E}_{q_{\theta}(x)}\left[\lo
 
 The LHS is not a function of $x$ so the integral simplifies 
 
-$$\mathbb{E}_{q_{\theta}(x)}[\log{p(y)}] = \int q_{\theta}(x)\log{p(y)}dx = \log{p(y)} \int q_{\theta}(x)dx = \log{p(y)}.$$
+$$-\mathbb{E}_{q_{\theta}(x)}[\log{p(y)}] = -\int q_{\theta}(x)\log{p(y)}dx = -\log{p(y)} \int q_{\theta}(x)dx = -\log{p(y)}.$$
 
 On the RHS we can choose how to split the terms inside the logarithm 
 
-$$-\mathbb{E}_{q_{\theta}(x)}\left[\log{\frac{p(y|x)p(x)q_{\theta}(x)}{p(x|y)q_{\theta}(x)}}\right].$$
+$$-\mathbb{E}_{q_{\theta}(x)}\left[\log{\frac{p(y|x)p(x)q_{\theta}(x)}{p(x|y)q_{\theta}(x)}}\right] = -\mathbb{E}_{q_{\theta}(x)}\left[\log{\frac{p(y|x)p(x)}{q_{\theta}(x)}}\right]-\mathbb{E}_{q_{\theta}(x)}\left[\log{\frac{q_{\theta}(x)}{p(x|y)}}\right].$$
+
+Recognising the second term as the Kullbach leibler divergence between $q_{\theta}(x)$ and $p(x | y)$ which is always nonnegative we have the inequality
+
+$$-\log{p(y)} \leq -\mathbb{E}_{q_{\theta}(x)}\left[\log{\frac{p(y|x)p(x)}{q_{\theta}(x)}}\right]$$
+
+with equality attained when  $q_{\theta}(x)=p(x | y)$. We can split terms out on the right hand side into an energy term minus an entropy term
+
+$$-\log{p(y)} \leq -\mathbb{E}_{q_{\theta}(x)}\left[\log{p(y|x)p(x)}\right] - H(q_{\theta}(x)) $$
+
+where $H(q_{\theta}(x)) = -\mathbb{E}_{q_{\theta}(x)}\left[\log{q_\theta(x)}\right]$. In other words the surprise of an observation is bounded above by the expectation of the joint probability of $x$ and $y$ occurring under our model and the entropy of the approximating distribution $q_{\theta}(x)$. A low entropy $q_{\theta}(x)$ places a lot of weight on some specific states of the world, which due to the the energy term need to 
+
+The natural next questions are how can we choose $q_{\theta}(x)$ to be expressive enough to represent different states of the world yet make the optimisation problem of minimising the resulting functional computationally tractable? These question will be a subject for a subsequent post.
