@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Posts",
     "section": "",
-    "text": "Math rendering example\n\n\n\nmeta\n\n\n\n\n\n\n\n\n\nAug 15, 2026\n\n\nRichard Mason\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nAug 15, 2026\n\n\nRichard Mason\n\n\n\n\n\nNo matching items"
+    "text": "Math rendering example\nA quick check that maths renders correctly.\nDate: Aug 15, 2026 | Author: Richard Mason\n\n\nWelcome\nThe first post on the blog.\nDate: Aug 15, 2026 | Author: Richard Mason\n\nNo matching items"
   },
   {
     "objectID": "posts/welcome/index.html",
