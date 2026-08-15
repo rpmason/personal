@@ -9,7 +9,6 @@ about:
     - icon: twitter-x
       href: https://x.com/richpmason
     - icon: github
-      text: GitHub
       href: https://github.com/rpmason
     - icon: linkedin
       href: https://www.linkedin.com/in/richard-p-mason/
