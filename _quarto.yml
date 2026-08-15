@@ -13,6 +13,9 @@ website:
         aria-label: X
       - icon: github
         href: https://github.com/rpmason
+      - icon: linkedin
+        href: https://www.linkedin.com/in/richard-p-mason/
+        aria-label: LinkedIn
 format:
   html:
     theme:

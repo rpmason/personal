@@ -11,6 +11,10 @@ about:
     - icon: github
       text: GitHub
       href: https://github.com/rpmason
+    - icon: linkedin
+      href: https://www.linkedin.com/in/richard-p-mason/
 ---
+I'm a researcher based in London with interests at the intersection of AI, optimisation, and control theory. 
 
-Notes on AI and other things.
+If you want to get in touch feel free to message me on twitter or linkedin.
+
