@@ -1,0 +1,45 @@
+---
+title: "Why do we want to do approximate inference?"
+author: "Richard Mason"
+date: "2026-08-15"
+description: "Motivating approximate inference based on the intractibility of doing exact bayesian inference."
+categories: [AI]
+---
+
+Suppose we have an agent that makes an observation about the world $y\in\mathcal{Y}$ and has some internal model that describes the probability of that observation $y$ conditioned on some hidden state of the world $x\in\mathcal{X}$, which we denote by $p(y | x)$, and a prior distribution on the hidden states of the world $p(x)$. Bayes' rule states that
+$$p(x | y) = \frac{p(y | x)p(x)}{p(y)} = \frac{p(y | x)p(x)}{\int {p(y | x)p(x)}dx},$$
+
+so in principle the agent can calculate the probability of a hidden state of the world under its internal model by multipling the likelihood $p(y | x)$ by the prior $p(x)$ and normalising by the marginal $p(y)$. The challenge is that computing the marginal term requires integrating over all of the possible hidden states, which tends to be intractable unless the internal model is chosen to have a form that has a closed form integral e.g., a Gaussian.
+
+The consequence is that if an Agent want to do Bayesian inference they face a choice: 
+
+1. large computational cost to do exact inference on arbitrary internal models. 
+2. restrict the internal model to a family that is tractable to integrate in closed form.
+3. do some form of approximate inference e.g., variational inference. 
+
+Depending on the compute time budget available, exact inference is likely to be infeasible, and limiting ourselves to families of distributions that have closed form integrals is quite restrictive, which leaves us with branch 3 to explore.
+
+One of the approaches to approximate inference that I like is the Free Energy principle by Friston. The idea is to first rearrange Bayes' rule to focus on the intractable marginal $p(y)$. 
+
+$$p(y) = \frac{p(y|x)p(x)}{p(x|y)}$$
+
+Let $q_{\theta}(x)$ be an arbitrary probability distirbution parameterised by $\theta\in\Theta$. We have the freedom to insert this distribution into the top and bottom of the fraction on the RHS
+
+$$p(y) = \frac{p(y|x)p(x)q_{\theta}(x)}{p(x|y)q_{\theta}(x)}.$$
+
+Next we take logs of both sides and negate, converting the LHS into surprise 
+
+$$-\log{p(y)} = -\log{\frac{p(y|x)p(x)q_{\theta}(x)}{p(x|y)q_{\theta}(x)}}.$$
+
+Then taking the expectation of both sides over $q_{\theta}(x)$ we have
+
+$$-\mathbb{E}_{q_{\theta}(x)}[\log{p(y)}] = -\mathbb{E}_{q_{\theta}(x)}\left[\log{\frac{p(y|x)p(x)q_{\theta}(x)}{p(x|y)q_{\theta}(x)}}\right].$$
+
+
+The LHS is not a function of $x$ so the integral simplifies 
+
+$$\mathbb{E}_{q_{\theta}(x)}[\log{p(y)}] = \int q_{\theta}(x)\log{p(y)}dx = \log{p(y)} \int q_{\theta}(x)dx = \log{p(y)}.$$
+
+On the RHS we can choose how to split the terms inside the logarithm 
+
+$$-\mathbb{E}_{q_{\theta}(x)}\left[\log{\frac{p(y|x)p(x)q_{\theta}(x)}{p(x|y)q_{\theta}(x)}}\right].$$
