@@ -1,0 +1,22 @@
+---
+title: "Math rendering example"
+author: "Richard Mason"
+date: "2026-08-15"
+categories: [meta]
+---
+
+A quick check that maths renders correctly. Inline math like $e^{i\pi} + 1 = 0$ works within a sentence.
+
+Display equations work too:
+
+$$
+\int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}
+$$
+
+As does numbered equation notation with `\begin{equation}`:
+
+$$
+\nabla \times \mathbf{B} - \frac{1}{c}\frac{\partial \mathbf{E}}{\partial t} = \frac{4\pi}{c}\mathbf{J}
+$$ {#eq-maxwell-ampere}
+
+Referenced as @eq-maxwell-ampere.

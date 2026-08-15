@@ -1,0 +1,22 @@
+project:
+  type: website
+
+website:
+  description: "Notes on maths and other things."
+  site-url: https://richardpmason.com
+  title: "Richard Mason"
+  navbar:
+    right:
+      - about.qmd
+      - icon: github
+        href: https://github.com/rpmason
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+    css: styles.css
+    html-math-method: mathjax
+
+
+
