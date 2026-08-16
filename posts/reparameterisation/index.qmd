@@ -1,0 +1,37 @@
+---
+title: "The reparameterisation trick"
+author: "Richard Mason"
+date: "2026-08-16"
+description: "In this post we see a well known approach for computing gradients of the Free Energy that uses a reparameterisation of the approximating density, leading to a computationally tractable method that can exploit auto differentiation."
+categories: [Variational Inference]
+---
+
+In a [previous post](../free_energy_derivation/index.qmd) we derived the Free Energy but left open the question of how to actually optimise the parameters of the approximating distribution $q_{\theta}(x)$. We want to be able to compute gradients of the Free Energy efficiently and with low variance so that we can do stochastic gradient descent. 
+
+We can write down the gradient of the Free Energy in general form as
+
+$$\nabla_{\theta}F(\theta) = \nabla_{\theta}\left(\mathbb{E}_{q_{\theta}(x)}\left[ \log{q_{\theta}(x)} - \log{p(x,y)} \right] \right).$$
+
+How can we compute gradients of the expectation? The difficulty here is that $\theta$ appears in both the probability density that we are taking expectations over and thing we want to differentiate. One approach to side-step this is to assume we can reparameterise $x$ as
+
+$$x = g_{\theta}(\epsilon),\quad \epsilon\sim p(\epsilon),$$
+
+where $g_{\theta}$ is a differentiable function and $p(\epsilon)$ is a probability density that does not depend on $\theta$ and is chosen to be efficient to sample from. What makes this a reparameterisation of $q_{\theta}$, rather than an arbitrary change of variables, is the requirement that the map reproduce the distribution we started with:
+
+$$\epsilon \sim p(\epsilon) \implies g_{\theta}(\epsilon) \sim q_{\theta}(x).$$
+
+For example, taking $q_{\theta} = \mathcal{N}(\mu, \sigma^{2})$ with $\theta = (\mu,\sigma)$, the corresponding map is $g_{\theta}(\epsilon) = \mu + \sigma\epsilon$ with $\epsilon\sim\mathcal{N}(0,1)$ — the same $\mu$ and $\sigma$, and any other choice would be sampling from the wrong Gaussian.
+
+Now instead of sampling from $q_{\theta}(x)$ we can sample from $p(\epsilon)$ and map through $g_{\theta}$. Because $g_{\theta}(\epsilon)$ is distributed as $q_{\theta}$, any expectation under $q_{\theta}$ can be rewritten as one under $p(\epsilon)$, $\mathbb{E}_{q_{\theta}(x)}[h(x)] = \mathbb{E}_{p(\epsilon)}[h(g_{\theta}(\epsilon))]$ — the same integral in different coordinates. Applying this to the Free Energy,
+
+$$\nabla_{\theta}F(\theta) = \nabla_{\theta}\left(\mathbb{E}_{p(\epsilon)}\left[ \log{q_{\theta}(g_{\theta}(\epsilon))} - \log{p(g_{\theta}(\epsilon),y)} \right] \right).$$
+
+The expectation is now taken over $p(\epsilon)$, which by construction does not depend on $\theta$ — every appearance of $\theta$ has been pushed into the integrand. This allows us to reorder the expectation and differentiation^[Formally we need $g_{\theta}$ differentiable in $\theta$ and the integrand's gradient dominated by an integrable function of $\epsilon$, so that dominated convergence applies. For the Gaussian case and smooth likelihoods this is routine.]  to get 
+
+$$\nabla_{\theta}F(\theta) = \mathbb{E}_{p(\epsilon)}\left[\nabla_{\theta}\left( \log{q_{\theta}(g_{\theta}(\epsilon))} - \log{p(g_{\theta}(\epsilon),y)}\right)\right].$$
+
+Now given $y$ we can compute an approximate gradient by sampling a batch of random values from $p(\epsilon)$, doing a forward pass then a backward pass to get the gradient for $\theta$ for each sample. The stochastic gradient descent algorithm for updating the parameters then is simply
+
+$$ \theta_{k+1} = \theta_{k} - \alpha \frac{1}{B}\sum_{i=1}^{B}\nabla_{\theta}\left( \log{q_{\theta}(g_{\theta}(\epsilon_{i}))} - \log{p(g_{\theta}(\epsilon_{i}),y)}\right),\quad \epsilon_{1},\epsilon_{2},\ldots\epsilon_{B}\sim p(\epsilon). $$
+
+The approach relies on $x$ being continuous and $g_{\theta}$ being differentiable in $\theta$, so it does not apply to discrete latent variables. If $q_{\theta}$ puts its mass on a countable set of atoms then $g_{\theta}(\epsilon)$ can only take values in that set, so it cannot vary continuously with $\theta$: it is piecewise constant, and $\nabla_{\theta}g_{\theta}(\epsilon)$ is zero almost everywhere and undefined at the jumps.
