@@ -1,8 +1,8 @@
 ---
-title: "Computing gradients of the Free Energy using the reparameterisation trick"
+title: "The reparameterisation trick"
 author: "Richard Mason"
 date: "2026-08-16"
-description: "In this post we see one approach for computing gradients of the Free Energy."
+description: "In this post we see a well known approach for computing gradients of the Free Energy that uses a reparameterisation of the approximating density, leading to a computationally tractable method that can exploit auto differentiation."
 categories: [Variational Inference]
 ---
 
