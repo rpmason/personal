@@ -1,0 +1,40 @@
+- title: "Scalable design of structured controllers using chordal decomposition"
+  authors: "Yang Zheng, **Richard P. Mason**, Antonis Papachristodoulou"
+  venue: "IEEE Transactions on Automatic Control, 63(3), 752–767"
+  year: 2017
+  links:
+    - text: "IEEE Xplore"
+      href: "https://ieeexplore.ieee.org/abstract/document/7979611"
+
+- title: "A chordal decomposition approach to scalable design of structured feedback gains over directed graphs"
+  authors: "Yang Zheng, **Richard P. Mason**, Antonis Papachristodoulou"
+  venue: "IEEE 55th Conference on Decision and Control (CDC)"
+  year: 2016
+  links:
+    - text: "IEEE Xplore"
+      href: "https://ieeexplore.ieee.org/abstract/document/7799333"
+
+- title: "A chordal sparsity approach to scalable linear and nonlinear systems analysis"
+  authors: "**Richard P. Mason**"
+  venue: "DPhil thesis, Department of Engineering Science, University of Oxford"
+  year: 2015
+  links:
+    - text: "Oxford Research Archive"
+      href: "https://ora.ox.ac.uk/objects/uuid:c4a978aa-185e-4029-a887-6aa2ab9efb37"
+
+- title: "Chordal sparsity, decomposing SDPs and the Lyapunov equation"
+  authors: "**Richard P. Mason**, Antonis Papachristodoulou"
+  venue: "American Control Conference (ACC)"
+  year: 2014
+  note: "Winner of the [O. Hugo Schuck Best Paper Award](https://a2c2.org/paper-award/o-hugo-schuck-best-paper-award#recipients), Theory category"
+  links:
+    - text: "IEEE Xplore"
+      href: "https://ieeexplore.ieee.org/abstract/document/6859255"
+
+- title: "Dynamic edge adaptation in delayed oscillator networks"
+  authors: "**Richard P. Mason**, Antonis Papachristodoulou"
+  venue: "IEEE 51st Conference on Decision and Control (CDC)"
+  year: 2012
+  links:
+    - text: "IEEE Xplore"
+      href: "https://ieeexplore.ieee.org/abstract/document/6426302"
