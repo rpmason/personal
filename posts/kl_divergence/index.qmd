@@ -63,7 +63,7 @@ The behaviour of that minimiser as $n$ grows is the answer to the question we st
 
 $$\theta_{\mathrm{MLE}} \longrightarrow \theta^{\star} = \arg\min_{\theta}D_{KL}(p || q_{\theta}).$$
 
-When $p\in\mathcal{Q}$ this is the usual consistency statement, since the divergence is zero at the truth. When $p\not\in\mathcal{Q}$ the limit $\theta^{\star}$ is still perfectly well defined: it is the M-projection of $p$ onto the family $\mathcal{Q}$, the closest point of the family in the forward KL sense. Fitting a misspecified model by maximum likelihood does not fail, it converges somewhere other than the truth, and the KL divergence tells us exactly where. This is White's (1982) analysis of the misspecified MLE, in which $\theta^{\star}$ is called the pseudo-true parameter.
+When $p\in\mathcal{Q}$ this is the usual consistency statement, since the divergence is zero at the truth. When $p\not\in\mathcal{Q}$ the limit $\theta^{\star}$ is still perfectly well defined: it is the projection of $p$ onto the family $\mathcal{Q}$, the closest point of the family in the forward KL sense. 
 
 ## The reverse direction: needing more than samples
 
