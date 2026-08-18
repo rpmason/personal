@@ -1,0 +1,81 @@
+---
+title: "KL divergence"
+author: "Richard Mason"
+date: "2026-08-18"
+description: "How Maximum Likelihood Estimate and Variational Inference relate to the KL divergence "
+categories: [Statistics]
+--- 
+
+
+In parametric statistics we often find ourselves trying to find the parameters of a model within a given family to minimise a loss on data drawn from a distribution that we don't know. What happens when the true underlying distribution is not in the family of distributions that we are trying to fit to the data? 
+
+To make this more precise, suppose $x\in\mathcal{X}$ is some random variable that is distributed according to some unknown density, $x\sim p$. Let $\mathcal{Q}$ be a family of probability distributions parameterised by $\theta\in\Theta$ and write a particular probability distribution in that family as $q_{\theta}(x)$. The question we want to probe is what happens when $p\not\in\mathcal{Q}$?
+
+The natural tool to think about this is the KL Divergence as it does not require the two densities that it is comparing to be in the same family, only that we have absolute continuity (which means that the divergence is finite only when the second argument puts mass wherever the first one does, so that $q_{\theta}(x) = 0 \implies p(x) = 0$ in the first case below). We can calculate the KL divergence between $p$ and $q_\theta$ in two different ways
+
+1. Taking the expectation over the true underlying probability density:
+$$D_{KL}(p || q_{\theta}) = \int p(x)\log \frac{p(x)}{q_{\theta}(x)}\mathrm{d}x.$$
+
+2. Taking the expectation over our model:
+$$D_{KL}(q_{\theta} || p) = \int q_{\theta}(x)\log{\frac{q_{\theta}(x)}{p(x)}}\mathrm{d}x.$$
+
+Neither of these can be computed as they stand, since we don't have $p$. Lets assume that we are given independent samples $X_{1},X_{2},\ldots,X_{n}\sim p$ so that we can form the empirical distribution function
+
+$$\hat{F}_{n}(x) = \frac{1}{n}\sum_{i=1}^{n}I(X_{i}\leq x),$$
+
+where $I(X_{i}\leq x) = 1$ if $X_{i}\leq x$ and $I(X_{i}\leq x) = 0$ if $X_{i}> x$. This is a distribution function in its own right: a staircase that starts at $0$, ends at $1$, and jumps by $1/n$ at each observation. The measure it corresponds to is a sum of point masses sitting on the data,
+
+$$\hat{P}_{n} = \frac{1}{n}\sum_{i=1}^{n}\delta_{X_{i}},$$
+
+and what makes it useful is that integrating any function against it returns a sample average,
+
+$$\int f(x)\,\mathrm{d}\hat{F}_{n}(x) = \frac{1}{n}\sum_{i=1}^{n}f(X_{i}).$$
+
+However we cannot just substitute $\hat{F}_{n}$ for the unknown $p$ in the two divergences above and then fit the model $q_\theta\in\mathcal{Q}$. This is because $\hat{P}_{n}$ places all of its mass on $n$ isolated points, and if $q_{\theta}$ is a continuous distribution then each of those points has $q_{\theta}$-probability zero. The absolute continuity condition fails as badly as it can, and
+
+$$D_{KL}(\hat{P}_{n} || Q_{\theta}) = +\infty$$
+
+for every $\theta$, which tells us nothing about which member of $\mathcal{Q}$ to prefer. The divergence in the other direction is degenerate for the mirror-image reason: $Q_{\theta}$ spreads mass over regions where $\hat{P}_{n}$ has none, so $D_{KL}(Q_{\theta} || \hat{P}_{n}) = +\infty$ as well. The empirical distribution is not a drop-in replacement for $p$ inside a KL divergence.
+
+The fix is to split the divergence up first and only then substitute. Doing this shows that the two directions are not symmetric in what they ask of the data.
+
+## The forward direction: maximum likelihood
+
+Splitting the logarithm in the first divergence gives
+
+$$D_{KL}(p || q_{\theta}) = \underbrace{\int p(x)\log p(x)\,\mathrm{d}x}_{-H(p)} - \int p(x)\log q_{\theta}(x)\,\mathrm{d}x.$$
+
+The first term is the negative differential entropy of $p$. It is unknown, but it does not contain $\theta$, so it plays no part in choosing a model: as far as the optimisation is concerned it is an additive constant. Everything that depends on $\theta$ sits in the second term, the cross entropy
+
+$$H(p,q_{\theta}) = -\int p(x)\log q_{\theta}(x)\,\mathrm{d}x = -\mathbb{E}_{p}\left[\log q_{\theta}(x)\right],$$
+
+and this is an ordinary expectation, under $p$, of a fixed function of $x$. That is exactly the kind of object $\hat{F}_{n}$ estimates. Substituting here rather than into the divergence as a whole,
+
+$$H(\hat{F}_{n},q_{\theta}) = -\int \log q_{\theta}(x)\,\mathrm{d}\hat{F}_{n}(x) = -\frac{1}{n}\sum_{i=1}^{n}\log q_{\theta}(X_{i}),$$
+
+which is the negative average log likelihood of the data under the model. Minimising it,
+
+$$\arg\min_{\theta}H(\hat{F}_{n},q_{\theta}) = \arg\max_{\theta}\frac{1}{n}\sum_{i=1}^{n}\log q_{\theta}(X_{i}) = \theta_{\mathrm{MLE}},$$
+
+so maximum likelihood is what you get by minimising the forward KL divergence with the empirical distribution standing in for the truth. Note that we never recover the value of $D_{KL}(p || q_{\theta})$, because $H(p)$ is not available to us; we only ever estimate the part of it that varies with $\theta$. The divergence is not estimable, but its minimiser is.
+
+The behaviour of that minimiser as $n$ grows is the answer to the question we started with. By the law of large numbers $\frac{1}{n}\sum_{i}\log q_{\theta}(X_{i}) \to \mathbb{E}_{p}[\log q_{\theta}(x)]$, and under the usual regularity conditions this carries over to the arguments that maximise each side^[Uniform convergence over $\Theta$ together with a well separated maximum, the standard conditions for consistency of an M-estimator.], so
+
+$$\theta_{\mathrm{MLE}} \longrightarrow \theta^{\star} = \arg\min_{\theta}D_{KL}(p || q_{\theta}).$$
+
+When $p\in\mathcal{Q}$ this is the usual consistency statement, since the divergence is zero at the truth. When $p\not\in\mathcal{Q}$ the limit $\theta^{\star}$ is still perfectly well defined: it is the projection of $p$ onto the family $\mathcal{Q}$, the closest point of the family in the forward KL sense. 
+
+## The reverse direction: needing more than samples
+
+Splitting the second divergence the same way gives
+
+$$D_{KL}(q_{\theta} || p) = \int q_{\theta}(x)\log q_{\theta}(x)\,\mathrm{d}x - \int q_{\theta}(x)\log p(x)\,\mathrm{d}x.$$
+
+The first term is the negative entropy of the model, which we can evaluate or sample from since $q_{\theta}$ is ours. The difficulty has moved into the second term, and it is a different kind of difficulty. Here $p$ appears *inside* an expectation taken over $q_{\theta}$: we need to evaluate $\log p$ at points that $q_{\theta}$ chooses, not at the points that $p$ handed us. Samples from $p$ do not help, because they arrive in the wrong places, and the empirical distribution cannot supply the missing values either, since $\hat{P}_{n}$ assigns no mass anywhere except at the observations.
+
+So the two directions ask for genuinely different things:
+
+- the forward divergence needs *samples from* $p$, and we have them,
+- the reverse divergence needs *pointwise evaluation of* $p$, and samples cannot provide it.
+
+This is why the reverse direction shows up in variational inference rather than in density estimation from data. There the target is a posterior $p(x|y) = p(x,y)/p(y)$ which we can evaluate up to the unknown normalising constant $p(y)$, and because that constant is additive in the logarithm it drops out of the gradient entirely, leaving the [Free Energy](../free_energy_derivation/index.qmd). The obstruction there is normalisation; the obstruction here is that we hold only samples. Recovering the reverse divergence from data alone means putting back something that the samples do not contain, whether that is a smoothed density estimate or an estimate of the ratio $q_{\theta}/p$ learned separately.
