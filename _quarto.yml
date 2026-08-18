@@ -7,6 +7,8 @@ website:
   title: "Richard Mason"
   navbar:
     right:
+      - text: "Blog"
+        href: index.qmd
       - publications.qmd
       - about.qmd
       - icon: twitter-x
