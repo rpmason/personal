@@ -1,0 +1,96 @@
+---
+title: "Sparse Memory Buffers"
+author: "Richard Mason"
+date: "2026-08-22"
+description: "Sparse Memory Buffers"
+categories: [AI]
+---
+
+Let $M\in\mathbb{R}^{m\times n}$ represent a memory buffer where each row $\mathbf{v}_{i}\in\mathbb{R}^{n}$ is a k-sparse vector 
+
+$$ \|\mathbf{v}_{i}\|_{0} \leq k, \quad \text{for } i=1,2,\ldots m.$$
+
+Given $M$, we define the associated sparsity matrix, $S\in\{0,1\}^{m\times n}$, by
+
+$$ S_{ij} = \begin{cases} 1 & \text{if } M_{ij} \neq 0, \\ 0 & \text{otherwise.} \end{cases} $$
+
+The sparsity matrix $S$ allows us to ask queries like 'return a list of rows with a given sparsity pattern'. Let $\mathbf{q}\in\{0,1\}^{n}$ be a sparsity pattern, then we can simply do $\mathbf{a} = S\mathbf{q}$ where
+
+$$a_{i} = | \text{supp}(\mathbf{v}_{i})\cap \text{supp}(\mathbf{q}) | \quad \text{for }i=1,2,\ldots,m.$$
+
+The count $a_{i}$ on its own is not yet an answer; it becomes one once we fix a rule for what counts as a match. Writing $t = \|\mathbf{q}\|_{0}$ for the number of features the query asks about, we can define different rules for retrieval of memories:
+
+- **overlap**, $a_{i} \geq \tau$. The memory shares at least $\tau$ of the queried features. This is the loosest rule: it tolerates memories that are missing some of what we asked for, and ranking by $a_{i}$ gives a graded notion of similarity rather than a yes/no answer.
+
+- **containment**, $a_{i} = t$. Every feature in the query is present in the memory, i.e. $\text{supp}(\mathbf{q}) \subseteq \text{supp}(\mathbf{v}_{i})$. Since $a_{i}$ can never exceed $t$, saturating the count is exactly the condition that nothing was missed. The memory is free to carry extra features beyond the ones we asked for.
+
+- **exact**, $a_{i} = t = \|\mathbf{v}_{i}\|_{0}$. Containment, plus the memory has no features outside the query, so the two supports coincide. The extra condition costs nothing to check: the row weights $\|\mathbf{v}_{i}\|_{0}$ are just the entries of $S\mathbf{1}$, which we can compute once and cache.
+
+So a single matrix-vector product, together with a precomputed vector of row weights, is enough to answer all three.
+
+<figure>
+<svg viewBox="0 0 760 320" role="img" width="100%" style="max-width:760px;height:auto;display:block;margin:0 auto;font-family:inherit;">
+  <title>Two-stage retrieval</title>
+  <desc>The full memory buffer is reduced to a small candidate set by a cheap boolean filter on the sparsity matrix, then those candidates are ranked by exact real-valued scores from the memory matrix.</desc>
+  <g fill="none" stroke="currentColor" stroke-width="1.25">
+    <rect x="50" y="80" width="100" height="192" />
+    <rect x="300" y="151" width="100" height="48" />
+  </g>
+  <!-- buffer rows, three of them surviving the filter -->
+  <g stroke="currentColor" stroke-width="0.75" opacity="0.35">
+    <path d="M50 104h100M50 128h100M50 152h100M50 176h100M50 200h100M50 224h100M50 248h100" />
+  </g>
+  <g fill="#2780e3" opacity="0.85">
+    <rect x="50.6" y="128.6" width="98.8" height="22.8" />
+    <rect x="50.6" y="176.6" width="98.8" height="22.8" />
+    <rect x="50.6" y="224.6" width="98.8" height="22.8" />
+  </g>
+  <g fill="#2780e3" opacity="0.85">
+    <rect x="300.6" y="151.6" width="98.8" height="14.8" />
+    <rect x="300.6" y="167.6" width="98.8" height="14.8" />
+    <rect x="300.6" y="183.6" width="98.8" height="14.8" />
+  </g>
+  <!-- ranked output -->
+  <g fill="#2780e3" opacity="0.85">
+    <rect x="550" y="151" width="140" height="12" />
+    <rect x="550" y="169" width="96" height="12" />
+    <rect x="550" y="187" width="47" height="12" />
+  </g>
+  <!-- arrows -->
+  <defs>
+    <marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="currentColor" />
+    </marker>
+  </defs>
+  <g stroke="currentColor" stroke-width="1.25" marker-end="url(#tip)">
+    <path d="M162 175h124" />
+    <path d="M412 175h124" />
+  </g>
+  <g fill="currentColor" text-anchor="middle" font-size="13">
+    <text x="100" y="70">memory buffer</text>
+    <text x="350" y="141">candidates</text>
+    <text x="620" y="141">ranked</text>
+    <text x="224" y="164" font-weight="600">stage 1 · filter</text>
+    <text x="474" y="164" font-weight="600">stage 2 · rank</text>
+  </g>
+  <g fill="currentColor" text-anchor="middle" font-size="12.5" font-style="italic">
+    <text x="224" y="192">a = Sq ≥ τ</text>
+    <text x="474" y="192">s = M<tspan baseline-shift="sub" font-size="9.5">C</tspan> x</text>
+    <text x="100" y="292">m rows</text>
+    <text x="350" y="219">|C| ≪ m</text>
+  </g>
+  <g fill="currentColor" text-anchor="middle" font-size="11" opacity="0.6">
+    <text x="224" y="212">boolean, over mk nonzeros</text>
+    <text x="474" y="212">float, over |C|n entries</text>
+  </g>
+</svg>
+<figcaption style="font-size:0.875em;opacity:0.75;margin-top:0.75em;text-align:center;">
+Stage one uses the sparsity matrix to discard rows that cannot score, cheaply and in bulk. Stage two spends real arithmetic only on what is left.
+</figcaption>
+</figure>
+
+## Clustering
+
+The matrix $MM^{T}\in\mathbb{S}_{+}^{m}$ is dot product between memories. 
+
+Want to look at the idea of hierarchical graphs with nodes at higher levels representing clusters at finer resolution. See if can get a result where can have sublinear retrieval by starting at the coarse level and working our way down. Using clique tree representation of chordal graphs is appealing. Having some dynamics where we add and prune clusters as new cliques emerge. Can imagine doing this by having a threshold distance between points and consider different levels of this threshold to get coarser or finer graphs. 
